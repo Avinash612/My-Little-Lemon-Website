@@ -12,35 +12,28 @@ const Header = () => {
   const { pathname } = useLocation();
   const [isNavExpanded, setIsNavExpanded] = useState(false);
 
+  const toggleNav = () => setIsNavExpanded(!isNavExpanded);
+  const closeNav = () => setIsNavExpanded(false);
+
   return (
     <header>
       <nav className="container grid nav-bar">
-        <Link className="nav-bar-logo" to={pages.get('home').path}>
-          <img src={logoImage} alt="Little Lemon logo" />
-        </Link>
-        <button 
-          className="nav-bar-hamburger" 
-          type="button" 
-          onClick={() => setIsNavExpanded(!isNavExpanded)}
-        >
-          {isNavExpanded ?
-            <FontAwesomeIcon icon={faXmark} size="2x" /> : 
-            <FontAwesomeIcon icon={faBars} size="2x" />}
+        <div className="nav-bar-logo">
+          <Link to={pages.get('home').path}>
+            <img src={logoImage} alt="Little Lemon logo" />
+          </Link>
+        </div>
+        <button className="nav-bar-hamburger" type="button" onClick={toggleNav}>
+          <FontAwesomeIcon icon={isNavExpanded ? faXmark : faBars} size="2x" />
         </button>
-        <ul 
-          className={isNavExpanded ? 'nav-bar-links expanded' : 'nav-bar-links'} 
-          onClick={() => setIsNavExpanded(!isNavExpanded)}
-        >
-          {navLinks.map((navLink, index) => 
+        <ul className={`nav-bar-links ${isNavExpanded ? 'expanded' : ''}`} onClick={closeNav}>
+          {navLinks.map(({ path, name }, index) => (
             <li key={index}>
-              <Link 
-                className={pathname === navLink.path ? 'current-location' : ''} 
-                to={navLink.path}
-              >
-                {navLink.name}
+              <Link className={pathname === path ? 'current-location' : ''} to={path}>
+                {name}
               </Link>
             </li>
-          )}
+          ))}
         </ul>
       </nav>
     </header>
